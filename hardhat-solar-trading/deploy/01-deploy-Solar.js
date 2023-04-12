@@ -13,4 +13,3 @@ module.exports = async ({ getNamedAccounts, deployments}) => {
     log("-----------------------------------------")
 }
 
-// 0x20496B557a898A6e28156aF0a6529d8e5DCbD95C
