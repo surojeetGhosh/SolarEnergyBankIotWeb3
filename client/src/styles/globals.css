@@ -4,6 +4,7 @@ body {
   background-image: url("../../public/Wave.svg");
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: cover;
   font-family: 'Merriweather Sans', sans-serif;
 }
 
@@ -20,4 +21,5 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   width: 100%;
 }
+
 

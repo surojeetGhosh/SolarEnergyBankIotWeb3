@@ -1,18 +1,40 @@
 import { ConnectButton } from "@web3uikit/web3";
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 export default function NavBar() {
+    const media = useMediaQuery("(max-width: 370px)");
+
     return (
-        <div className="navbar p-5">
-            <a class="navbar-brand text-light" href="/">
-                <img
-                    src="./logo.png"
-                    width="50"
-                    height="50"
-                    className="d-inline-block align-top"
-                    alt=""
-                />
+        <div class="navbar navbar-expand-md navbar-light bg-transparent p-5 p-xs-2">
+            <a class="navbar-brand text-dark" href="#">
+                {media ? null : (
+                    <img
+                        src="./logo.png"
+                        width="50"
+                        height="50"
+                        className="d-inline-block align-center"
+                        alt=""
+                    />
+                )}
+
                 <h1 className="d-inline-block px-2 brand">EzSolax</h1>
             </a>
-            <ConnectButton />
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <div className="navbar-nav p-3">
+                    <ConnectButton />
+                </div>
+            </div>
         </div>
     );
 }
