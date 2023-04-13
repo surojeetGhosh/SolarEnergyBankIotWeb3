@@ -13,8 +13,15 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.0",
+    "@web3uikit/core": "^0.4.3",
+    "@web3uikit/icons": "^0.4.1",
+    "@web3uikit/web3": "^0.3.2",
+    "ethers": "^6.3.0",
+    "magic-sdk": "^16.2.0",
+    "moralis-v1": "^1.12.0",
     "next": "13.3.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-moralis": "^1.4.2"
   }
 }
