@@ -5,8 +5,8 @@ export default function NavBar() {
     const media = useMediaQuery("(max-width: 370px)");
 
     return (
-        <div class="navbar navbar-expand-md navbar-light bg-transparent p-5 p-xs-2">
-            <a class="navbar-brand text-dark" href="#">
+        <div className="navbar navbar-expand-md navbar-light bg-transparent p-5 p-xs-2">
+            <a className="navbar-brand text-dark" href="#">
                 {media ? null : (
                     <img
                         src="./logo.png"
@@ -17,10 +17,10 @@ export default function NavBar() {
                     />
                 )}
 
-                <h1 className="d-inline-block px-2 brand" style={{fontSize: media? "1rem": "2rem", fontWeight:"bold"}}>EzSolax</h1>
+                <h1 className="d-inline-block px-2 letter-space" style={{fontSize: media? "1rem": "2rem", fontWeight:"bold"}}>EzSolax</h1>
             </a>
             <button
-                class="navbar-toggler"
+                className="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbarNavDropdown"
@@ -28,9 +28,9 @@ export default function NavBar() {
                 aria-expanded="false"
                 aria-label="Toggle navigation"
             >
-                <span class="navbar-toggler-icon"></span>
+                <span className="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div className="collapse navbar-collapse" id="navbarNavDropdown">
                 <div className="navbar-nav p-3">
                     <ConnectButton className="m-auto" />
                 </div>
