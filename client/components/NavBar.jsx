@@ -10,14 +10,14 @@ export default function NavBar() {
                 {media ? null : (
                     <img
                         src="./logo.png"
-                        width="50"
-                        height="50"
+                        width="40"
+                        height="40"
                         className="d-inline-block align-center"
                         alt=""
                     />
                 )}
 
-                <h1 className="d-inline-block px-2 brand">EzSolax</h1>
+                <h1 className="d-inline-block px-2 brand" style={{fontSize: media? "1rem": "2rem", fontWeight:"bold"}}>EzSolax</h1>
             </a>
             <button
                 class="navbar-toggler"
@@ -32,7 +32,7 @@ export default function NavBar() {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <div className="navbar-nav p-3">
-                    <ConnectButton />
+                    <ConnectButton className="m-auto" />
                 </div>
             </div>
         </div>
