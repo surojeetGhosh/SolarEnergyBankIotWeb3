@@ -11,6 +11,8 @@ import { useMoralis } from "react-moralis";
 import FundButton from "./FundButton";
 import StartButton from "./StartButton";
 import { useNotification } from "@web3uikit/core";
+import { Refresh } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 export default function ConnectedBody(props) {
     const media = useMediaQuery("(min-width: 650px)");
@@ -27,6 +29,23 @@ export default function ConnectedBody(props) {
         functionName: "getBalance",
     });
 
+    async function refresh() {
+        const data = await getBalance({
+            onError: (error) => {
+                dispatch({
+                    type: "ERROR",
+                    message: "Contract Not Connected",
+                    title: "Status Notification",
+                    position: "topR",
+                    icon: "bell",
+                });
+            },
+        });
+        if (data) {
+            setBalance(parseFloat(data.toString()) / 1e18);
+        }
+    }
+
     useEffect(() => {
         if (isWeb3Enabled) {
             async function getBalanceAccount() {
@@ -37,14 +56,13 @@ export default function ConnectedBody(props) {
                             message: "Contract Not Connected",
                             title: "Status Notification",
                             position: "topR",
-                            icon: "bell"
+                            icon: "bell",
                         });
-                    }
-                })
-                if(data) {
-                    setBalance((parseFloat(data.toString()) / 1e18));
+                    },
+                });
+                if (data) {
+                    setBalance(parseFloat(data.toString()) / 1e18);
                 }
-                
             }
             getBalanceAccount();
             setRefresh(false);
@@ -60,10 +78,17 @@ export default function ConnectedBody(props) {
                     className="p-2 rounded shadow-lg d-flex align-items-center"
                 >
                     <Grid item sm={6} xs={12} className="text-center">
-                        <StartButton />
+                        <StartButton
+                            setLoading={props.setLoading}
+                            setRefresh={setRefresh}
+                            balance = {balance}
+                        />
                     </Grid>
                     <Grid item sm={6} xs={12} className="text-center">
-                        <FundButton setLoading = {props.setLoading} setRefresh = {setRefresh }/>
+                        <FundButton
+                            setLoading={props.setLoading}
+                            setRefresh={setRefresh}
+                        />
                     </Grid>
                     <Grid item xs={12} container>
                         <Paper className="m-auto p-4 w-75 d-flex flex-column">
@@ -79,9 +104,15 @@ export default function ConnectedBody(props) {
                                 className="text-dark fw-bold text-center"
                                 sx={{ fontSize: media ? "1.5rem" : "1rem" }}
                             >
-                                {parseFloat(balance).toFixed(5).toString()} units
+                                {parseFloat(balance).toFixed(5).toString()}{" "}
+                                units
                             </Typography>
                         </Paper>
+                    </Grid>
+                    <Grid item xs={12} className="text-center">
+                        <Button variant="contained" color="secondary"  onClick={refresh}>
+                            <Refresh />
+                        </Button>
                     </Grid>
                 </Grid>
             </Container>

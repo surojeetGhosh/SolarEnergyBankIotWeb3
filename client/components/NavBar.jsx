@@ -17,7 +17,15 @@ export default function NavBar() {
                     />
                 )}
 
-                <h1 className="d-inline-block px-2 letter-space" style={{fontSize: media? "1rem": "2rem", fontWeight:"bold"}}>EzSolax</h1>
+                <h1
+                    className="d-inline-block px-2 letter-space"
+                    style={{
+                        fontSize: media ? "1rem" : "2rem",
+                        fontWeight: "bold",
+                    }}
+                >
+                    EzSolax
+                </h1>
             </a>
             <button
                 className="navbar-toggler"
