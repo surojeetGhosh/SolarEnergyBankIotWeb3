@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Solar.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.4;\r\n\r\n/*\r\n    Electricity Cost\r\n    Units = (Power in watts/1000) \r\n    1 unit = 4.01 rs = \r\n    1 unit = 272136077158440 wei 0.0002721 ether\r\n*/\r\nerror Solar_NoFallback();\r\nerror Solar_InsufficientFunds(uint256 given);\r\nerror Solar_NotOwner();\r\nerror Solar_NoWithdraw();\r\nerror Solar_AmbiguousState();\r\n\r\ncontract Solar {\r\n\r\n    // enum\r\n    enum State { Ambigious, Active, Inactive }\r\n\r\n    /* Solar Variables */\r\n    uint256 private pricePerUnitInWei;\r\n    // userA => x units\r\n    mapping(address => uint256) private _balances;\r\n    // machineId => state\r\n    mapping(uint32 => State) machine; \r\n    address private immutable owner;\r\n\r\n    /*Events*/\r\n    event SolarWithdraw(uint256 amount);\r\n    event SolarBalanceSet(address indexed buyer, uint256 amount);\r\n\r\n    constructor(uint256 _pricePerUnitInWei) {\r\n        pricePerUnitInWei = _pricePerUnitInWei;\r\n        owner = msg.sender;\r\n    }\r\n\r\n    receive() external payable {\r\n        buy();\r\n    }\r\n\r\n    fallback() external payable {\r\n        revert Solar_NoFallback();\r\n    }\r\n\r\n    \r\n\r\n    function buy() public payable {\r\n        if(msg.value == 0) {\r\n            revert Solar_InsufficientFunds(msg.value);\r\n        }\r\n        uint256 unitsRemaining = _balances[msg.sender];\r\n        uint256 unitOrdered = (msg.value * 1e18)  / pricePerUnitInWei;\r\n        _balances[msg.sender] = unitsRemaining + unitOrdered;\r\n    }\r\n\r\n    function withdraw() external OnlyOwner{\r\n        uint256 balance = address(this).balance;\r\n        (bool CallSuccess,) = payable(msg.sender).call{value: balance}(\"\");\r\n        if(!CallSuccess) {\r\n            revert Solar_NoWithdraw();\r\n        }\r\n        emit SolarWithdraw(balance);\r\n    }\r\n\r\n    // getting energy remaining for the user\r\n    function getBalance() public view returns(uint256) {\r\n        return _balances[msg.sender];\r\n    }\r\n\r\n    // setting energy remaining for the user\r\n    function setBalance(uint256 usedbalance) public {\r\n        _balances[msg.sender] -= usedbalance;\r\n        emit SolarBalanceSet(msg.sender, _balances[msg.sender]);\r\n    }\r\n\r\n    // getting price per unit\r\n    function getPrice() public view returns(uint256) {\r\n        return pricePerUnitInWei;\r\n    }\r\n\r\n    // setting price per unit\r\n    function setPrice(uint256 _pricePerUnitInWei) public OnlyOwner {\r\n        pricePerUnitInWei = _pricePerUnitInWei;\r\n    }\r\n\r\n    // setting machine \r\n    function setMachine(uint32 _machineId) public OnlyOwner {\r\n        machine[_machineId] = State.Inactive;\r\n    }\r\n\r\n    // getting Machine State\r\n    function getMachineState(uint32 _machineId) public view returns(bool) {\r\n        State scenerio = machine[_machineId];\r\n        if(scenerio == State.Active) {\r\n            return true;\r\n        }\r\n        else {\r\n            return false;\r\n        }\r\n    }\r\n\r\n    // setting Machine State\r\n    function setMachineState(uint32 _machineState, bool state) public {\r\n        if(state == true && machine[_machineState] == State.Inactive) {\r\n            machine[_machineState] = State.Active;\r\n        }\r\n        else if(state == false && machine[_machineState] == State.Active) {\r\n            machine[_machineState] = State.Inactive;\r\n        } else {\r\n            revert Solar_AmbiguousState();\r\n        }\r\n    }\r\n\r\n    // modifier\r\n    modifier OnlyOwner {\r\n        if(msg.sender != owner) {\r\n            revert Solar_NotOwner();\r\n        }\r\n        _;\r\n    }\r\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

@@ -16,7 +16,7 @@ error Solar_AmbiguousState();
 contract Solar {
 
     // enum
-    enum State { Active, Inactive }
+    enum State { Ambigious, Active, Inactive }
 
     /* Solar Variables */
     uint256 private pricePerUnitInWei;
