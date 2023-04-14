@@ -23,7 +23,7 @@ contract Solar {
     // userA => x units
     mapping(address => uint256) private _balances;
     // machineId => state
-    mapping(uint32 => State) machine; 
+    mapping(uint256 => State) machine; 
     address private immutable owner;
 
     /*Events*/
@@ -85,32 +85,41 @@ contract Solar {
     }
 
     // setting machine 
-    function setMachine(uint32 _machineId) public OnlyOwner {
+    function setMachine(uint256 _machineId) public OnlyOwner {
         machine[_machineId] = State.Inactive;
     }
 
     // getting Machine State
-    function getMachineState(uint32 _machineId) public view returns(bool) {
+    function getMachineState(uint256 _machineId) public view returns(bool) {
         State scenerio = machine[_machineId];
         if(scenerio == State.Active) {
             return true;
         }
-        else {
+        else if(scenerio == State.Inactive) {
             return false;
-        }
-    }
-
-    // setting Machine State
-    function setMachineState(uint32 _machineState, bool state) public {
-        if(state == true && machine[_machineState] == State.Inactive) {
-            machine[_machineState] = State.Active;
-        }
-        else if(state == false && machine[_machineState] == State.Active) {
-            machine[_machineState] = State.Inactive;
         } else {
             revert Solar_AmbiguousState();
         }
     }
+
+
+    function startMachine(uint256 _machineId) public {
+        if(machine[_machineId] == State.Inactive) {
+            machine[_machineId] = State.Active;
+        } else {
+            revert Solar_AmbiguousState();
+        }
+    }
+
+    function stopMachine(uint256 _machineId) public {
+        if(machine[_machineId] == State.Active) {
+            machine[_machineId] = State.Inactive;
+        } else {
+            revert Solar_AmbiguousState();
+        }
+    }
+
+
 
     // modifier
     modifier OnlyOwner {
