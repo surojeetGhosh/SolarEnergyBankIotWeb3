@@ -4,19 +4,23 @@ import { Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Paper } from "@mui/material";
 import SolarPowerIcon from "@mui/icons-material/SolarPower";
-import { Button } from "@mui/material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import PowerIcon from "@mui/icons-material/Power";
 import contract from "../constants/contract";
 import { useEffect, useState } from "react";
 import { useWeb3Contract } from "react-moralis";
 import { useMoralis } from "react-moralis";
+import FundButton from "./FundButton";
+import StartButton from "./StartButton";
+import { useNotification } from "@web3uikit/core";
 
-export default function ConnectedBody() {
+export default function ConnectedBody(props) {
     const media = useMediaQuery("(min-width: 650px)");
     const [balance, setBalance] = useState(0);
-    const [errorTransaction, setErrorTransaction] = useState(null);
+    const dispatch = useNotification();
+    const [refreshBalance, setRefresh] = useState(false);
+    // current user attributes
     const { isWeb3Enabled, account } = useMoralis();
+
+    // contract functions
     const { runContractFunction: getBalance } = useWeb3Contract({
         abi: contract.abi,
         contractAddress: contract.address,
@@ -25,17 +29,27 @@ export default function ConnectedBody() {
 
     useEffect(() => {
         if (isWeb3Enabled) {
-            
-            getBalance()
-                .then((res) => {
-                    setBalance(parseInt(res.toString()));
-                    console.log(parseInt(res.toString()));
+            async function getBalanceAccount() {
+                const data = await getBalance({
+                    onError: (error) => {
+                        dispatch({
+                            type: "ERROR",
+                            message: "Contract Not Connected",
+                            title: "Status Notification",
+                            position: "topR",
+                            icon: "bell"
+                        });
+                    }
                 })
-                .catch((err) => {
-                    setErrorTransaction(err);
-                });
+                if(data) {
+                    setBalance((parseFloat(data.toString()) / 1e18));
+                }
+                
+            }
+            getBalanceAccount();
+            setRefresh(false);
         }
-    }, [account]);
+    }, [account, refreshBalance]);
 
     return (
         <div>
@@ -46,22 +60,10 @@ export default function ConnectedBody() {
                     className="p-2 rounded shadow-lg d-flex align-items-center"
                 >
                     <Grid item sm={6} xs={12} className="text-center">
-                        <Button
-                            variant="contained"
-                            color="warning"
-                            className="w-50 p-4 fw-bold"
-                        >
-                            <PowerIcon /> Start
-                        </Button>
+                        <StartButton />
                     </Grid>
                     <Grid item sm={6} xs={12} className="text-center">
-                        <Button
-                            variant="contained"
-                            color="warning"
-                            className="w-50 p-4 fw-bold"
-                        >
-                            <AttachMoneyIcon /> Buy Energy
-                        </Button>
+                        <FundButton setLoading = {props.setLoading} setRefresh = {setRefresh }/>
                     </Grid>
                     <Grid item xs={12} container>
                         <Paper className="m-auto p-4 w-75 d-flex flex-column">
@@ -77,7 +79,7 @@ export default function ConnectedBody() {
                                 className="text-dark fw-bold text-center"
                                 sx={{ fontSize: media ? "1.5rem" : "1rem" }}
                             >
-                                {balance} units
+                                {parseFloat(balance).toFixed(5).toString()} units
                             </Typography>
                         </Paper>
                     </Grid>
