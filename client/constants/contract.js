@@ -1,5 +1,5 @@
 module.exports = {
-    address: "0x8F02e2c49609dAB8c88BC2b5634a8520efb7B339",
+    address: "0x664b7a40B42f79F71158B7dD812C98491c7619EC",
     abi: [
       {
         "inputs": [
@@ -84,6 +84,25 @@ module.exports = {
         "name": "buy",
         "outputs": [],
         "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_machineId",
+            "type": "uint256"
+          }
+        ],
+        "name": "currentUser",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
         "type": "function"
       },
       {

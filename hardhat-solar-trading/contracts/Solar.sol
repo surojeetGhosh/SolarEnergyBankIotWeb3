@@ -18,12 +18,19 @@ contract Solar {
     // enum
     enum State { Ambigious, Active, Inactive }
 
+    //struct
+
+    struct machineInfo {
+        address currentUser;
+        State state;
+    }
+
     /* Solar Variables */
     uint256 private pricePerUnitInWei;
     // userA => x units
     mapping(address => uint256) private _balances;
-    // machineId => state
-    mapping(uint256 => State) machine; 
+    // machineId => machineInfo
+    mapping(uint256 => machineInfo) machine; 
     address private immutable owner;
 
     /*Events*/
@@ -86,12 +93,12 @@ contract Solar {
 
     // setting machine 
     function setMachine(uint256 _machineId) public OnlyOwner {
-        machine[_machineId] = State.Inactive;
+        machine[_machineId] = machineInfo(address(0), State.Inactive);
     }
 
     // getting Machine State
     function getMachineState(uint256 _machineId) public view returns(bool) {
-        State scenerio = machine[_machineId];
+        State scenerio = machine[_machineId].state;
         if(scenerio == State.Active) {
             return true;
         }
@@ -104,22 +111,26 @@ contract Solar {
 
 
     function startMachine(uint256 _machineId) public {
-        if(machine[_machineId] == State.Inactive) {
-            machine[_machineId] = State.Active;
+        if(machine[_machineId].state == State.Inactive) {
+            machine[_machineId].state = State.Active;
+            machine[_machineId].currentUser = msg.sender;
         } else {
             revert Solar_AmbiguousState();
         }
     }
 
     function stopMachine(uint256 _machineId) public {
-        if(machine[_machineId] == State.Active) {
-            machine[_machineId] = State.Inactive;
+        if(machine[_machineId].state == State.Active) {
+            machine[_machineId].state = State.Inactive;
+            machine[_machineId].currentUser = address(0);
         } else {
             revert Solar_AmbiguousState();
         }
     }
 
-
+    function currentUser(uint256 _machineId) public view returns(address) {
+        return machine[_machineId].currentUser;
+    }
 
     // modifier
     modifier OnlyOwner {

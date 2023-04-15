@@ -8,7 +8,8 @@ async function main() {
     
     //  (await Store.setMachine("1")).wait(1);
     const status = await Store.getMachineState("1");
-    console.log(status.toString());
+    const currentUser = await Store.currentUser("1");
+    console.log(status.toString(), " ", currentUser.toString());
 }
 
 
