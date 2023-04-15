@@ -1,5 +1,5 @@
 module.exports = {
-    address: "0x664b7a40B42f79F71158B7dD812C98491c7619EC",
+    address: "0x9Bc754296600A51755996af578093e3886b91ffd",
     abi: [
       {
         "inputs": [
@@ -48,8 +48,33 @@ module.exports = {
         "inputs": [
           {
             "indexed": true,
+            "internalType": "uint256",
+            "name": "machineId",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "enum Solar.State",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "indexed": false,
             "internalType": "address",
-            "name": "buyer",
+            "name": "currentUser",
+            "type": "address"
+          }
+        ],
+        "name": "MachineState",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "user",
             "type": "address"
           },
           {
@@ -60,19 +85,6 @@ module.exports = {
           }
         ],
         "name": "SolarBalanceSet",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "name": "SolarWithdraw",
         "type": "event"
       },
       {
