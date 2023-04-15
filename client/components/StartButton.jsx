@@ -57,13 +57,11 @@ export default function StartButton(props) {
     };
 
     const handleSubmit = () => {
-        setState(true);
         handleClose();
         startMachine();
     }
 
     const handleStop = () => {
-        setState(false);
         stopMachine();
     }
 
@@ -106,6 +104,7 @@ export default function StartButton(props) {
     async function handleStartSuccess(tx) {
         await tx.wait(1);
         props.setLoading(false);
+        setState(true);
         dispatch({
             type: "info",
             message: "Machine Started",
@@ -118,6 +117,7 @@ export default function StartButton(props) {
     async function handleStopSuccess(tx) {
         await tx.wait(1);
         props.setLoading(false);
+        setState(false);
         dispatch({
             type: "info",
             message: "Machine Stopped",
