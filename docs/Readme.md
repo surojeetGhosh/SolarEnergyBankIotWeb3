@@ -10,5 +10,5 @@
 > + Contract will save wallet address and money remaining
 > + If machine is On then machine can't be switched only other
 > + whoever switched on will be able to stop charging and used amount will be exceeded and it will never exceed money given.
-> + 0xDD0a0890F1507FbCDBB4CE4748624c20A0fcc5dE Solar contract address 
+> + 0x664b7a40B42f79F71158B7dD812C98491c7619EC Solar contract address 
 
