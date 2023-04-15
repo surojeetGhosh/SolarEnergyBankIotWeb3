@@ -34,8 +34,8 @@ contract Solar {
     address private immutable owner;
 
     /*Events*/
-    event SolarWithdraw(uint256 amount);
-    event SolarBalanceSet(address indexed buyer, uint256 amount);
+    event SolarBalanceSet(address indexed user, uint256 amount);
+    event MachineState(uint256 indexed machineId, State state, address currentUser);
 
     constructor(uint256 _pricePerUnitInWei) {
         pricePerUnitInWei = _pricePerUnitInWei;
@@ -67,7 +67,6 @@ contract Solar {
         if(!CallSuccess) {
             revert Solar_NoWithdraw();
         }
-        emit SolarWithdraw(balance);
     }
 
     // getting energy remaining for the user
@@ -114,6 +113,7 @@ contract Solar {
         if(machine[_machineId].state == State.Inactive) {
             machine[_machineId].state = State.Active;
             machine[_machineId].currentUser = msg.sender;
+            emit MachineState(_machineId, machine[_machineId].state, machine[_machineId].currentUser);
         } else {
             revert Solar_AmbiguousState();
         }
@@ -123,6 +123,7 @@ contract Solar {
         if(machine[_machineId].state == State.Active) {
             machine[_machineId].state = State.Inactive;
             machine[_machineId].currentUser = address(0);
+            emit MachineState(_machineId, machine[_machineId].state, machine[_machineId].currentUser);
         } else {
             revert Solar_AmbiguousState();
         }
