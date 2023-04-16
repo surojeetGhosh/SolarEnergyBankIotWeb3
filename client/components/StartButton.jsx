@@ -22,7 +22,6 @@ export default function StartButton(props) {
     const dispatch = useNotification();
     const [machineCode, setMachineCode] = useState("");
     const ref = useRef();
-    const [machineState, setState] = useState(false);
     const [open, setOpen] = useState(false);
     const [image, setImage] = useState("");
     const { runContractFunction: start } = useWeb3Contract({
@@ -104,7 +103,7 @@ export default function StartButton(props) {
     async function handleStartSuccess(tx) {
         await tx.wait(1);
         props.setLoading(false);
-        setState(true);
+        props.setState(true);
         dispatch({
             type: "info",
             message: "Machine Started",
@@ -117,7 +116,7 @@ export default function StartButton(props) {
     async function handleStopSuccess(tx) {
         await tx.wait(1);
         props.setLoading(false);
-        setState(false);
+        props.setState(false);
         dispatch({
             type: "info",
             message: "Machine Stopped",
@@ -128,7 +127,7 @@ export default function StartButton(props) {
     }
     return (
         <>
-            {machineState ? (
+            {props.machineState && props.balance !== 0  ? (
                 <Button
                     variant="contained"
                     color="warning"

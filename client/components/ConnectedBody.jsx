@@ -19,6 +19,7 @@ export default function ConnectedBody(props) {
     const [balance, setBalance] = useState(0);
     const dispatch = useNotification();
     const [refreshBalance, setRefresh] = useState(false);
+    const [machineState, setState] = useState(false);
     // current user attributes
     const { isWeb3Enabled, account } = useMoralis();
 
@@ -30,7 +31,7 @@ export default function ConnectedBody(props) {
     });
 
     async function refresh() {
-        const data = await getBalance({
+        var data = await getBalance({
             onError: (error) => {
                 dispatch({
                     type: "ERROR",
@@ -42,7 +43,11 @@ export default function ConnectedBody(props) {
             },
         });
         if (data) {
-            setBalance(parseFloat(data.toString()) / 1e18);
+            data = parseFloat(data.toString()) / 1e18
+            if(data === 0) {
+                setState(false);
+            }
+            setBalance(data);
         }
     }
 
@@ -82,6 +87,8 @@ export default function ConnectedBody(props) {
                             setLoading={props.setLoading}
                             setRefresh={setRefresh}
                             balance = {balance}
+                            machineState = {machineState}
+                            setState = {setState}
                         />
                     </Grid>
                     <Grid item sm={6} xs={12} className="text-center">
