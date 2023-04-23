@@ -18,6 +18,7 @@ export default function ConnectedBody(props) {
     const media = useMediaQuery("(min-width: 650px)");
     const [balance, setBalance] = useState(0);
     const dispatch = useNotification();
+    const [machineCode, setMachineCode] = useState("");
     const [refreshBalance, setRefresh] = useState(false);
     const [machineState, setState] = useState(false);
     // current user attributes
@@ -28,6 +29,14 @@ export default function ConnectedBody(props) {
         abi: contract.abi,
         contractAddress: contract.address,
         functionName: "getBalance",
+    });
+    const { runContractFunction: getUser } = useWeb3Contract({
+        abi: contract.abi,
+        contractAddress: contract.address,
+        functionName: "currentUser",
+        params: {
+            _machineId: "1",
+        },
     });
 
     async function refresh() {
@@ -50,6 +59,54 @@ export default function ConnectedBody(props) {
             setBalance(data);
         }
     }
+
+    useEffect(() => {
+        if(isWeb3Enabled) {
+            async function getCurrentUser() {
+                const data = await getUser({
+                    onError: (error) => {
+                        dispatch({
+                            type: "ERROR",
+                            message: "Contract Not Connected",
+                            title: "Status Notification",
+                            position: "topR",
+                            icon: "bell",
+                        });
+                    },
+                });
+                if (data) {
+                    if (data.toString().toUpperCase() === account.toString().toUpperCase()) {   
+                        setState(true);
+                        setMachineCode("1");
+                    }
+                }
+            }
+            getCurrentUser();
+        }
+    }, []);
+
+    useEffect(() => {
+        if(isWeb3Enabled) {
+            async function getBalanceAccount() {
+                const data = await getBalance({
+                    onError: (error) => {
+                        dispatch({
+                            type: "ERROR",
+                            message: "Contract Not Connected",
+                            title: "Status Notification",
+                            position: "topR",
+                            icon: "bell",
+                        });
+                    },
+                });
+                if (data) {
+                    setBalance(parseFloat(data.toString()) / 1e18);
+                }
+            }
+            const timer = setTimeout(getBalanceAccount, 10000);
+            clearTimeout(timer);
+        }
+    });
 
     useEffect(() => {
         if (isWeb3Enabled) {
@@ -89,6 +146,8 @@ export default function ConnectedBody(props) {
                             balance = {balance}
                             machineState = {machineState}
                             setState = {setState}
+                            machineCode = {machineCode}
+                            setMachineCode = {setMachineCode}
                         />
                     </Grid>
                     <Grid item sm={6} xs={12} className="text-center">

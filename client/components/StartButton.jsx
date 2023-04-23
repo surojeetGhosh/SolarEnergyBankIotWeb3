@@ -1,5 +1,5 @@
 import { Button, Box, Input } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import PowerIcon from "@mui/icons-material/Power";
 import Modal from "@mui/material/Modal";
 import { Typography, useNotification } from "@web3uikit/core";
@@ -20,7 +20,7 @@ const style = {
 
 export default function StartButton(props) {
     const dispatch = useNotification();
-    const [machineCode, setMachineCode] = useState("");
+    
     const ref = useRef();
     const [open, setOpen] = useState(false);
     const [image, setImage] = useState("");
@@ -29,7 +29,7 @@ export default function StartButton(props) {
         contractAddress: contract.address,
         functionName: "startMachine",
         params: {
-            _machineId: machineCode,
+            _machineId: props.machineCode,
         },
     });
 
@@ -38,13 +38,13 @@ export default function StartButton(props) {
         contractAddress: contract.address,
         functionName: "stopMachine",
         params: {
-            _machineId: machineCode,
+            _machineId: props.machineCode,
         },
     });
 
     
     const handleOpen = () => {
-        setMachineCode("");
+        props.setMachineCode("");
         setOpen(true);
     };
     const handleClose = () => {
@@ -125,6 +125,7 @@ export default function StartButton(props) {
             icon: "bell",
         });
     }
+
     return (
         <>
             {props.machineState && props.balance !== 0  ? (
@@ -155,9 +156,9 @@ export default function StartButton(props) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className="d-flex flex-column">
-                    {machineCode ? (
+                    {props.machineCode ? (
                         <>
-                            <Typography className="m-auto">Machine Code: {machineCode}</Typography>
+                            <Typography className="m-auto">Machine Code: {props.machineCode}</Typography>
                             <Button
                                 variant="contained"
                                 color="warning"
@@ -178,7 +179,7 @@ export default function StartButton(props) {
                                             if (
                                                 JSON.parse(result).machineCode
                                             ) {
-                                                setMachineCode(
+                                                props.setMachineCode(
                                                     JSON.parse(result)
                                                         .machineCode
                                                 );
