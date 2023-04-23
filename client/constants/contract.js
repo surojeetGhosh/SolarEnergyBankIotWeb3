@@ -1,5 +1,5 @@
 module.exports = {
-    address: "0x9Bc754296600A51755996af578093e3886b91ffd",
+    address: "0xcaE126557923b5F2b8e23ec4CCB6B868e897c5AE",
     abi: [
       {
         "inputs": [
@@ -118,7 +118,13 @@ module.exports = {
         "type": "function"
       },
       {
-        "inputs": [],
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          }
+        ],
         "name": "getBalance",
         "outputs": [
           {
@@ -164,6 +170,11 @@ module.exports = {
       },
       {
         "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
           {
             "internalType": "uint256",
             "name": "usedbalance",

@@ -70,13 +70,14 @@ contract Solar {
     }
 
     // getting energy remaining for the user
-    function getBalance() public view returns(uint256) {
-        return _balances[msg.sender];
+    function getBalance(address user) public view returns(uint256) {
+        return _balances[user];
     }
 
     // setting energy remaining for the user
-    function setBalance(uint256 usedbalance) public {
-        _balances[msg.sender] -= usedbalance;
+    function setBalance(address user, uint256 usedbalance) public {
+        require(_balances[user] >= usedbalance, "Solar: Insufficient Balance");
+        _balances[user] -= usedbalance;
         emit SolarBalanceSet(msg.sender, _balances[msg.sender]);
     }
 

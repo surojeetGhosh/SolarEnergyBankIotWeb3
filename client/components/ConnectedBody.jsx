@@ -29,6 +29,9 @@ export default function ConnectedBody(props) {
         abi: contract.abi,
         contractAddress: contract.address,
         functionName: "getBalance",
+        params: {
+            user: account.toString(),
+        }
     });
     const { runContractFunction: getUser } = useWeb3Contract({
         abi: contract.abi,
